@@ -1,7 +1,19 @@
 const list = document.getElementById('files-list');
 
+const fileInput = document.getElementById('fileInput');
+
+let dataTransfer = new DataTransfer();
+
+fileInput.addEventListener('change', function () {
+
+  for (let i = 0; i < this.files.length; i++) {
+        dataTransfer.items.add(this.files[i]);
+    }
+    fileInput.files = dataTransfer.files;
+
+  });
+
 document.addEventListener("DOMContentLoaded", (event) => {
-  // Usar fetch para obtener la lista de archivos
   fetch('/read-files')
     .then(response => {
       if (!response.ok) {
@@ -10,12 +22,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
       return response.json();
     })
     .then(data => {
-      // Verificar que la respuesta contiene archivos
       if (data && data.archivos && Array.isArray(data.archivos)) {
-        // Limpiar la lista anterior (si existe)
         list.innerHTML = '';
         
-        // Iterar sobre cada archivo y crear un elemento de lista
         data.archivos.forEach(function(archivo, index) {
           const elementoLinea = document.createElement('li');
           const elementoLista = document.createElement('div');

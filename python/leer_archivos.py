@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-def read_files():
+def leer_archivos():
 
     testfiles_path = Path(__file__).parent.parent / "testfiles"
     files_list = []

@@ -1,11 +1,13 @@
 import os
 from elasticsearch import Elasticsearch
 from dotenv import load_dotenv
+from pathlib import Path
 
 # Cargamos variables de entorno desde .env
 load_dotenv()
 
 # Instanciamos la conexión global
+es = None
 try:
     elastic_user = os.getenv("ELASTIC_USER", "elastic")
     es_password = os.getenv("ELASTIC_PASSWORD", "")
@@ -14,27 +16,76 @@ try:
         basic_auth=(elastic_user, es_password), 
         verify_certs=False # Solo porque es local y auto-firmado
     )
+    # Verificar que realmente está conectado
+    es.info()
 except Exception as e:
-    print("Advertencia: No se pudo instanciar Elasticsearch al iniciar el módulo. Verifica tus credenciales.")
+    print(f"Advertencia: No se pudo conectar a Elasticsearch. Usará búsqueda en archivos locales. Error: {e}")
     es = None
+
+def buscar_en_archivos_locales(query):
+    """
+    Búsqueda alternativa en archivos locales cuando Elasticsearch no está disponible.
+    Busca el término en los nombres de archivo y contenido de texto plano.
+    """
+    resultados = []
+    testfiles_path = Path(__file__).parent.parent / "testfiles"
+    query_lower = query.lower()
+    
+    if not testfiles_path.exists():
+        return resultados
+    
+    for file_path in testfiles_path.iterdir():
+        if not file_path.is_file():
+            continue
+        
+        titulo = file_path.name
+        
+        # Búsqueda en nombre de archivo
+        if query_lower in titulo.lower():
+            resultados.append({
+                "titulo": titulo,
+                "url": f"/ver_archivo/{titulo}",
+                "descripcion": f"Encontrado en el nombre del archivo",
+                "tipo": file_path.suffix[1:] if file_path.suffix else "desconocido"
+            })
+            continue
+        
+        # Para archivos de texto, buscar en el contenido
+        if file_path.suffix in ['.txt', '.csv', '.md']:
+            try:
+                with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
+                    contenido = f.read()
+                    if query_lower in contenido.lower():
+                        # Encontrar un fragmento del contenido
+                        idx = contenido.lower().find(query_lower)
+                        inicio = max(0, idx - 50)
+                        fin = min(len(contenido), idx + 100)
+                        fragmento = contenido[inicio:fin].strip()
+                        
+                        resultados.append({
+                            "titulo": titulo,
+                            "url": f"/ver_archivo/{titulo}",
+                            "descripcion": f"... {fragmento} ...",
+                            "tipo": file_path.suffix[1:] if file_path.suffix else "desconocido"
+                        })
+            except Exception as e:
+                print(f"Error al leer {titulo}: {e}")
+    
+    return resultados
 
 def buscar_informacion(query):
     """
     Toma la palabra a buscar (query) y retorna una lista de resultados 
-    ejecutando una búsqueda avanzada y con formato en Elasticsearch.
+    ejecutando una búsqueda en Elasticsearch (o fallback a búsqueda local).
     """
     query = query.strip()
     
-    # Si la búsqueda está vacía, no devolvemos nada
     if not query:
         return []
     
+    # Si Elasticsearch no está disponible, usar búsqueda alternativa
     if es is None:
-        return [{
-            "titulo": "Error del sistema",
-            "url": "#",
-            "descripcion": "El cliente de Elasticsearch no está configurado correctamente."
-        }]
+        return buscar_en_archivos_locales(query)
 
     # Búsqueda profesional en Elasticsearch
     es_query = {
@@ -93,8 +144,9 @@ def buscar_informacion(query):
         
     except Exception as e:
         print(f"Error consultando Elasticsearch: {e}")
-        return [{
-            "titulo": "Error en el Buscador",
-            "url": "#",
-            "descripcion": "No se pudo conectar con el motor de búsqueda local."
-        }]
+        # Fallback a búsqueda local si hay error
+        resultados_locales = buscar_en_archivos_locales(query)
+        if resultados_locales:
+            return resultados_locales
+        # Si nadie encuentra nada, devolver lista vacía en lugar de error
+        return []

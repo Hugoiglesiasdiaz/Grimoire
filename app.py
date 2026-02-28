@@ -1,23 +1,28 @@
 from sys import path
 path.append("./python")
-import ReadFiles
+from leer_archivos import leer_archivos
+from buscador_logica import buscar_informacion
 
-from fastapi import FastAPI
+from fastapi import FastAPI, File, UploadFile, Query
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
+
 import uvicorn
-from pathlib import Path
+
 import json
+
+from pathlib import Path
+import os
+
+from typing import List
 
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 app.mount("/javascript", StaticFiles(directory="javascript"), name="javascript")
 
-# app.secret_key = 'grimoire_super_secret'
-
-# app.config['UPLOAD_FOLDER'] = 'testfiles'
-# os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+UPLOAD_FOLDER = 'testfiles'
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 def read_template(template_name: str) -> str:
     template_path = Path("templates") / template_name
@@ -27,56 +32,52 @@ def read_template(template_name: str) -> str:
 def home():
     return read_template('index.html')
 
-@app.route('/upload', methods=['POST'])
-def upload_file():
-    if 'file' not in request.files:
-        flash('Error: No se ha enviado ninguna parte de archivo.', 'error')
-        return redirect(url_for('home'))
-        
-    files = request.files.getlist('file')
-    if not files or files[0].filename == '':
-        flash('Error: No se seleccionó ningún archivo.', 'error')
-        return redirect(url_for('home'))
+@app.post('/upload', response_class=JSONResponse)
+async def upload_file(files: List[UploadFile] = File(...)):
+    if not files:
+        return {"success": False, "message": "No se seleccionó ningún archivo.", "count": 0}
         
     uploaded_count = 0
     for file in files:
-        if file and file.filename != '':
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        if file.filename:
+            file_path = os.path.join(UPLOAD_FOLDER, file.filename)
+            with open(file_path, "wb") as buffer:
+                content = await file.read()
+                buffer.write(content)
             uploaded_count += 1
             
     if uploaded_count > 0:
-        flash(f'¡Subida completada! {uploaded_count} archivo(s) guardado(s) correctamente.', 'success')
+        return {
+            "success": True, 
+            "message": f"¡Subida completada! {uploaded_count} archivo(s) guardado(s) correctamente.",
+            "count": uploaded_count
+        }
     else:
-        flash('Error: Hubo un problema al guardar los archivos.', 'error')
-        
-    return redirect(url_for('home'))
+        return {"success": False, "message": "Hubo un problema al guardar los archivos.", "count": 0}
 
-@app.route('/about', response_class=HTMLResponse)
+@app.get('/about', response_class=HTMLResponse)
 def about():
     return read_template('about.html')
 
 @app.get('/read-files', response_class=JSONResponse)
 def read_files():
-    # Obtener el JSON como string y parsearlo para retornarlo como diccionario
-    json_data = ReadFiles.read_files()
+    json_data = leer_archivos()
     return json.loads(json_data)
 
-@app.route('/buscador', response_class=HTMLResponse)
+@app.get('/buscador', response_class=HTMLResponse)
 def buscador():
-    return read_template('Buscador.html')
+    return read_template('buscador.html')
 
-@app.route('/api/buscar', methods=['GET'])
-def api_buscar():
-    query = request.args.get('q', '').strip()
+@app.get('/api/buscar', response_class=JSONResponse)
+def api_buscar(q: str = Query("", description="Término de búsqueda")):
+    query = q.strip()
     
     if query:
-        # Aquí conectamos tú lógica de búsqueda que separaste en buscador_logica.py
         resultados = buscar_informacion(query)
     else:
         resultados = []
         
-    return jsonify(resultados)
+    return resultados
 
 if __name__ == '__main__':
     uvicorn.run(app, host='0.0.0.0', port=8080)
