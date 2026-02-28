@@ -16,11 +16,31 @@ document.addEventListener("DOMContentLoaded", (event) => {
         list.innerHTML = '';
         
         // Iterar sobre cada archivo y crear un elemento de lista
-        data.archivos.forEach(function(archivo) {
-          const elementoLista = document.createElement('li');
+        data.archivos.forEach(function(archivo, index) {
+          const elementoLinea = document.createElement('li');
+          const elementoLista = document.createElement('div');
           elementoLista.textContent = archivo.nombre;
-          elementoLista.title = `${archivo.tamaño_kb} KB`; // Mostrar tamaño al pasar el mouse
-          list.appendChild(elementoLista);
+          elementoLista.title = `${archivo.tamaño_kb} KB`;
+          elementoLista.id = 'archivo-item-archivo' + index;
+
+          const infoElementoLista = document.createElement('div');
+          infoElementoLista.textContent = `${archivo.tamaño_kb} KB | ${archivo.fecha_modificacion} | ${archivo.tipo} | ${archivo.ruta}`;
+          infoElementoLista.style.display = 'none';
+
+          infoElementoLista.id = 'archivo-info-archivo' + index;
+          
+
+          elementoLinea.appendChild(elementoLista);
+          elementoLinea.appendChild(infoElementoLista);
+          list.appendChild(elementoLinea);
+
+
+          elementoLista.onmouseover = function() {
+            infoElementoLista.style.display = 'block';
+          };
+          elementoLista.onmouseout = function() {
+            infoElementoLista.style.display = 'none';
+          };
         });
         
         console.log(`Se cargaron ${data.total_archivos} archivos`);
@@ -34,4 +54,5 @@ document.addEventListener("DOMContentLoaded", (event) => {
       errorLi.textContent = 'Error al cargar los archivos: ' + error.message;
       list.appendChild(errorLi);
     });
+
 });
