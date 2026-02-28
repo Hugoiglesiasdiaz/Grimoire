@@ -1,5 +1,5 @@
-from flask import Flask, render_template, request, jsonify
-from python.buscador_logica import buscar_informacion, request, redirect, url_for, flash
+from flask import Flask, render_template, request, jsonify, redirect, url_for, flash
+from python.buscador_logica import buscar_informacion
 import os
 from werkzeug.utils import secure_filename
 
