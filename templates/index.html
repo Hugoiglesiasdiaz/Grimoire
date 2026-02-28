@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grimoire - Inicio</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 
 <body>
@@ -34,6 +34,10 @@
                 </div>
                 {% endif %}
                 {% endwith %}
+                <div id="list-container">
+                    <ul id="files-list">
+                    </ul>
+                </div>
 
                 <h2>Bienvenido a Grimoire</h2>
                 <p>Esta es una aplicación web simple en Python usando Flask.</p>
@@ -104,6 +108,7 @@
             }
         }
     </script>
+    <script type="text/javascript" src="/javascript/index.js"></script>
 </body>
 
 </html>

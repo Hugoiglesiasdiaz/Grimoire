@@ -76,6 +76,33 @@ ul {
     margin-bottom: 1rem;
 }
 
+#list-container {
+    background-color: #333;
+    margin: 4px;
+    padding: 4px;
+    border-color: #667eea;
+    border-style: solid;
+    border-width: 3px;
+    width: 35%;
+    text-align: justify;
+    word-break: break-all;
+    line-height: 200%;
+    padding-left: -1rem;
+}
+
+.archivo-info {
+    font-size: 0.9rem;
+    color: #cfcfcf;
+    margin-top: 0.5rem;
+    margin-right: 1rem;
+    line-height: normal;
+    white-space: pre-line;
+}
+
+#files-list {
+    color: lightblue;
+}
+
 footer {
     background: #333;
     color: white;

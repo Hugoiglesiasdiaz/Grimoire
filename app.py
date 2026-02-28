@@ -1,18 +1,31 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for, flash
-from python.buscador_logica import buscar_informacion
-import os
-from werkzeug.utils import secure_filename
+from sys import path
+path.append("./python")
+import ReadFiles
 
-app = Flask(__name__)
-app.secret_key = 'grimoire_super_secret'
-app.config['UPLOAD_FOLDER'] = 'testfiles'
+from fastapi import FastAPI
+from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
+import uvicorn
+from pathlib import Path
+import json
 
-# Ensure the upload folder exists
-os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+app = FastAPI()
 
-@app.route('/')
+app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/javascript", StaticFiles(directory="javascript"), name="javascript")
+
+# app.secret_key = 'grimoire_super_secret'
+
+# app.config['UPLOAD_FOLDER'] = 'testfiles'
+# os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+def read_template(template_name: str) -> str:
+    template_path = Path("templates") / template_name
+    return template_path.read_text(encoding='utf-8')
+
+@app.get('/', response_class=HTMLResponse)
 def home():
-    return render_template('index.html')
+    return read_template('index.html')
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -39,13 +52,19 @@ def upload_file():
         
     return redirect(url_for('home'))
 
-@app.route('/about')
+@app.route('/about', response_class=HTMLResponse)
 def about():
-    return render_template('about.html')
+    return read_template('about.html')
 
-@app.route('/buscador')
+@app.get('/read-files', response_class=JSONResponse)
+def read_files():
+    # Obtener el JSON como string y parsearlo para retornarlo como diccionario
+    json_data = ReadFiles.read_files()
+    return json.loads(json_data)
+
+@app.route('/buscador', response_class=HTMLResponse)
 def buscador():
-    return render_template('Buscador.html')
+    return read_template('Buscador.html')
 
 @app.route('/api/buscar', methods=['GET'])
 def api_buscar():
@@ -60,4 +79,5 @@ def api_buscar():
     return jsonify(resultados)
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=8080)
+    uvicorn.run(app, host='0.0.0.0', port=8080)
+

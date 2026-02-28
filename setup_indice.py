@@ -7,7 +7,7 @@ load_dotenv()
 
 # Instanciar entorno
 elastic_user = os.getenv("ELASTIC_USER", "elastic")
-es_password = os.getenv("ELASTIC_PASSWORD", "")
+es_password = os.getenv("ELASTIC_PASSWORD", "bJFeJexM3flXhJVfZEPX")
 
 # Conexión profesional usando el usuario y contraseña del archivo .env
 es = Elasticsearch(
