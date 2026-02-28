@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grimoire - Buscador</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .search-form {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .search-form input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .search-form button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .search-form button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <h1>Grimoire</h1>
+            <ul>
+                <li><a href="/">Inicio</a></li>
+                <li><a href="/about">Acerca de</a></li>
+                <li><a href="/buscador">Buscador</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <h2>Buscador</h2>
+            <form action="/buscar" method="GET" class="search-form">
+                <input type="text" id="search-box" name="q" placeholder="Escribe aquí para buscar..." required>
+                <button type="submit" id="search-button" onclick="buscar(event)">Buscar</button>
+            </form>
+            <div id="resultados" style="margin-top: 20px;"></div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Grimoire. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        async function buscar(event) {
+            // Evitamos que el formulario recargue la página
+            event.preventDefault();
+
+            const searchBox = document.getElementById('search-box');
+            const query = searchBox.value.trim();
+            const resultadosDiv = document.getElementById('resultados');
+
+            if (query !== '') {
+                console.log('Buscando en API local:', query);
+
+                // Mostrar estado de "cargando"
+                resultadosDiv.innerHTML = '<p>Buscando...</p>';
+
+                try {
+                    // Consultamos nuestra ruta en app.py enviando el término (q)
+                    const response = await fetch(`/api/buscar?q=${encodeURIComponent(query)}`);
+                    const data = await response.json();
+
+                    // Limpieza antes de mostrar resultados nuevos
+                    resultadosDiv.innerHTML = '';
+
+                    if (data.length === 0) {
+                        resultadosDiv.innerHTML = '<p>No se encontraron resultados.</p>';
+                    } else {
+                        // Recorremos la lista de resultados en formato JSON y los agregamos
+                        data.forEach(item => {
+                            const div = document.createElement('div');
+                            div.style.marginBottom = '20px';
+                            div.style.padding = '15px';
+                            div.style.backgroundColor = '#f9f9f9';
+                            div.style.border = '1px solid #ddd';
+                            div.style.borderRadius = '8px';
+
+                            div.innerHTML = `
+                                <h3 style="margin: 0 0 8px 0;">
+                                    <a href="${item.url}" style="text-decoration: none; color: #007bff;">${item.titulo}</a>
+                                </h3>
+                                <p style="margin: 0; color: #555;">${item.descripcion}</p>
+                            `;
+                            resultadosDiv.appendChild(div);
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error al realizar la búsqueda:', error);
+                    resultadosDiv.innerHTML = '<p style="color: red;">Ocurrió un error al contactar al servidor.</p>';
+                }
+            } else {
+                resultadosDiv.innerHTML = '<p>Por favor, escribe algo para buscar.</p>';
+            }
+        }
+    </script>
+</body>
+
+</html>

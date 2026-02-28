@@ -42,3 +42,16 @@ Grimoire/
 
 - `/` - Página de inicio
 - `/about` - Página acerca de
+
+## Elastic Search
+
+- Usuario y contraseña en .env.
+- Descargar elastic search en https://www.elastic.co/downloads/elasticsearch
+- Descomprimir y ejecutar el archivo binario carpeta bin.
+- Apuntar contraseña que genere,aparece solo en la primera ejecución.
+- Luego en el .venv del proyecto ejecutar: python setup_indice.py
+- Inicializa el indice en elastic search.
+- Luego en el .venv del proyecto ejecutar: python indexador.py
+- Inicializa la indexación de archivos de prueba.
+- Luego en el .venv del proyecto ejecutar: python app.py
+- Inicia la aplicación web.
