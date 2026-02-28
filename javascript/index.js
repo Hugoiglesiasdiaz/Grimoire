@@ -1,4 +1,4 @@
-const list = document.getElementById('list');
+const list = document.getElementById('files-list');
 
 document.addEventListener("DOMContentLoaded", (event) => {
   // Usar fetch para obtener la lista de archivos
@@ -24,8 +24,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
           elementoLista.id = 'archivo-item-archivo' + index;
 
           const infoElementoLista = document.createElement('div');
-          infoElementoLista.textContent = `${archivo.tamaño_kb} KB | ${archivo.fecha_modificacion} | ${archivo.tipo} | ${archivo.ruta}`;
+          infoElementoLista.textContent = `${archivo.tamaño_kb} KB \r\n ${archivo.fecha_modificacion} \r\n ${archivo.tipo} \r\n ${archivo.ruta}`;
           infoElementoLista.style.display = 'none';
+          infoElementoLista.className = "archivo-info";
 
           infoElementoLista.id = 'archivo-info-archivo' + index;
           
