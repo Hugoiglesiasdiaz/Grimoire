@@ -262,6 +262,47 @@ body {
     color: #4a5568;
 }
 
+.file-icon {
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
+    flex-shrink: 0;
+}
+
+.file-type-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    background-color: #e2e8f0;
+    color: #4a5568;
+    margin-left: 0.75rem;
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+}
+
+.sui-result__actions {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #f0f0f0;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.sui-download-btn {
+    font-size: 0.8rem;
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: color 0.2s;
+}
+
+.sui-download-btn:hover {
+    color: #5a6fd6;
+    text-decoration: underline;
+}
+
+
 @media (max-width: 600px) {
     .sui-result__body {
         flex-direction: column;

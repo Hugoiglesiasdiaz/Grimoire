@@ -2,7 +2,7 @@ import axios from 'axios';
 
 class CustomAPIConnector {
     async onSearch(state, queryConfig) {
-        const { searchTerm, filters, current, resultsPerPage } = state;
+        const { searchTerm, filters, current, resultsPerPage, sortList } = state;
 
         try {
             const response = await axios.post('/api/search', {
@@ -10,6 +10,7 @@ class CustomAPIConnector {
                 filters,
                 current,
                 resultsPerPage,
+                sort: sortList,
             });
 
             return {
