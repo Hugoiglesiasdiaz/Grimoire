@@ -1,0 +1,79 @@
+[
+    {
+        "id": "park_01",
+        "title": "Acadia",
+        "description": "Covering most of Mount Desert Island and other coastal islands, Acadia features the tallest mountain on the Atlantic coast of the United States...",
+        "states": [
+            "Maine"
+        ],
+        "visitors": 3303393,
+        "world_heritage_site": false,
+        "location": "44.35,-68.21",
+        "acres": 49057.36,
+        "square_km": 198.5,
+        "date_established": "1919-02-26T06:00:00Z",
+        "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Mount_Desert_Island_from_Cadillac_Mountain.jpg/800px-Mount_Desert_Island_from_Cadillac_Mountain.jpg"
+    },
+    {
+        "id": "park_02",
+        "title": "Yosemite",
+        "description": "Yosemite features sheer granite cliffs, exceptionally tall waterfalls, and old-growth forests at a unique intersection of geology and hydrology.",
+        "states": [
+            "California"
+        ],
+        "visitors": 4048153,
+        "world_heritage_site": true,
+        "location": "37.83,-119.50",
+        "acres": 761747.5,
+        "square_km": 3082.7,
+        "date_established": "1890-10-01T06:00:00Z",
+        "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Yosemite_Valley_from_Tunnel_View.jpg/800px-Yosemite_Valley_from_Tunnel_View.jpg"
+    },
+    {
+        "id": "park_03",
+        "title": "Yellowstone",
+        "description": "Situated on the Yellowstone Caldera, the park has an expansive network of geothermal areas including boiling mud pots, vividly colored hot springs such as Grand Prismatic Spring, and regularly erupting geysers, the best-known being Old Faithful.",
+        "states": [
+            "Wyoming",
+            "Montana",
+            "Idaho"
+        ],
+        "visitors": 4115000,
+        "world_heritage_site": true,
+        "location": "44.60,-110.50",
+        "acres": 2219790.71,
+        "square_km": 8983.2,
+        "date_established": "1872-03-01T06:00:00Z",
+        "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Grand_Prismatic_Spring_2001_800.jpg/800px-Grand_Prismatic_Spring_2001_800.jpg"
+    },
+    {
+        "id": "park_04",
+        "title": "Zion",
+        "description": "Located at the junction of the Colorado Plateau, Great Basin, and Mojave Desert regions, the park contains sandstone features such as mesas, rock towers, and canyons, including the Virgin River Narrows.",
+        "states": [
+            "Utah"
+        ],
+        "visitors": 4320033,
+        "world_heritage_site": false,
+        "location": "37.30,-113.05",
+        "acres": 147237.02,
+        "square_km": 595.8,
+        "date_established": "1919-11-19T06:00:00Z",
+        "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Zion_national_park_-_Flickr_-_avhell.jpg/800px-Zion_national_park_-_Flickr_-_avhell.jpg"
+    },
+    {
+        "id": "park_05",
+        "title": "Grand Canyon",
+        "description": "The Grand Canyon, carved by the mighty Colorado River, is 277 miles long, up to 18 miles wide, and is a mile deep.",
+        "states": [
+            "Arizona"
+        ],
+        "visitors": 6254238,
+        "world_heritage_site": true,
+        "location": "36.06,-112.14",
+        "acres": 1201647.03,
+        "square_km": 4862.9,
+        "date_established": "1919-02-26T06:00:00Z",
+        "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Grand_Canyon_View_from_Pima_Point_2010.jpg/800px-Grand_Canyon_View_from_Pima_Point_2010.jpg"
+    }
+]
